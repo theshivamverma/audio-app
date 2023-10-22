@@ -16,10 +16,19 @@
 .rowPill {
   width: 100%;
   border-radius: 1.5rem;
-  padding: 0.2rem 1rem;
+  padding: 0.5rem 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
   color: #000;
   font-size: 0.8rem;
+}
+
+.rowPill.dragging {
+  cursor: grab;
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+  cursor: -ms-grab;
+  cursor: -o-grab;
+  cursor: grabbing;
 }
