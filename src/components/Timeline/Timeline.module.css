@@ -1,0 +1,25 @@
+.timelineContainer {
+  width: 100%;
+  margin-top: 2rem;
+  padding: 1rem;
+}
+
+.timelineRow {
+  display: flex;
+  align-items: center;
+  padding: 1rem 0;
+  position: relative;
+  background-color: #ced6e0;
+  border-bottom: 1px solid black;
+}
+
+.rowPill {
+  width: 100%;
+  border-radius: 1.5rem;
+  padding: 0.2rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #000;
+  font-size: 0.8rem;
+}

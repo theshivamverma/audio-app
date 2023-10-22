@@ -10,3 +10,4 @@
 
 - JavaScript
 - React
+- Howler.js
