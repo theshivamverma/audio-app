@@ -17,17 +17,27 @@ const TimelineRow = ({ audioData, totalDuration }) => {
   const [selectedPill, setSelectedPill] = useState("");
 
   const handleMouseDown = (e, id) => {
+    // width of container
     const parentWidth = e.currentTarget.parentElement.offsetWidth;
     setIsDragging(true);
+
+    // set starting x co-ordinate, converting percent to pixels
     setStartX(e.clientX - (leftMargin * parentWidth) / 100);
+
+    // set selected audio pill
     setSelectedPill(id);
   };
 
   const handleMouseMove = (e) => {
     if (isDragging) {
+      // new margin from mouse position - initial x
       const newLeftMargin = e.clientX - startX;
-      const parentWidth = e.currentTarget.parentElement.offsetWidth; // Get the parent's width
-      const componentWidth = e.currentTarget.offsetWidth; // Get the component's width
+
+      // Get the parent's width
+      const parentWidth = e.currentTarget.parentElement.offsetWidth;
+
+      // Get the component's width
+      const componentWidth = e.currentTarget.offsetWidth;
 
       // Calculate the minimum and maximum allowed left margins
       const minLeftMargin = 0;
@@ -39,14 +49,17 @@ const TimelineRow = ({ audioData, totalDuration }) => {
         Math.min(newLeftMargin, maxLeftMargin)
       );
 
+      // percent margin from pixels
       const percentMargin = (clampedLeftMargin / parentWidth) * 100;
 
+      // set new margin value
       setLeftMargin(percentMargin);
     }
   };
 
   const handleMouseUp = () => {
     setIsDragging(false);
+    // update audio start time based on dragged position
     setAudioPills((prevPills) => {
       return prevPills.map((pill) => {
         if (pill.id === selectedPill) {
@@ -61,6 +74,10 @@ const TimelineRow = ({ audioData, totalDuration }) => {
     setLeftMargin(calculateOffset(startTime, totalDuration));
   }, [audioPills]);
 
+
+  // audio pills are rendered based on their duration and starting point compared to total duration of the timeline
+  // width represents the time for which it will be played and offset represents when it will start playing;
+  
   return (
     <div className={styles.timelineRow}>
       <div

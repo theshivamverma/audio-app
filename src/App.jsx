@@ -42,14 +42,12 @@ function App() {
     }
   };
 
+  // rest timeline to default
   const resetHandler = () => {
     setAudioPills([]);
-    setIsPlaying(false);
-
   }
 
-  
-
+  // progress bar update
   useEffect(() => {
     let interval;
     if (isPlaying) {
