@@ -5,21 +5,21 @@ import { calculateOffset, calculateWidth } from "../../common/utils";
 import styles from "./Timeline.module.css";
 
 const TimelineRow = ({ audioData, totalDuration }) => {
-  const { audioName, duration, startPoint, bgColor, id } = audioData;
-  const { audioPills, setAudioPills } = useAudio()
+  const { audioName, duration, startTime, bgColor, id } = audioData;
+  const { audioPills, setAudioPills } = useAudio();
 
   const [isDragging, setIsDragging] = useState(false);
-  const [leftMargin, setLeftMargin] = useState(calculateOffset(startPoint, totalDuration));
+  const [leftMargin, setLeftMargin] = useState(
+    calculateOffset(startTime, totalDuration)
+  );
   const [startX, setStartX] = useState(0);
-  
-  const [selectedPill, setSelectedPill] = useState('');
+
+  const [selectedPill, setSelectedPill] = useState("");
 
   const handleMouseDown = (e, id) => {
     const parentWidth = e.currentTarget.parentElement.offsetWidth;
     setIsDragging(true);
-    setStartX(
-      e.clientX - (leftMargin * parentWidth) / 100
-    );
+    setStartX(e.clientX - (leftMargin * parentWidth) / 100);
     setSelectedPill(id);
   };
 
@@ -47,19 +47,19 @@ const TimelineRow = ({ audioData, totalDuration }) => {
 
   const handleMouseUp = () => {
     setIsDragging(false);
-    setAudioPills(prevPills => {
-      return prevPills.map(pill => {
-        if(pill.id === selectedPill){
-          pill.startPoint = (totalDuration * leftMargin) / 100;
+    setAudioPills((prevPills) => {
+      return prevPills.map((pill) => {
+        if (pill.id === selectedPill) {
+          pill.startTime = (totalDuration * leftMargin) / 100;
         }
         return pill;
-      })
-    })
+      });
+    });
   };
 
   useEffect(() => {
-    setLeftMargin(calculateOffset(startPoint, totalDuration));
-  }, [audioPills])
+    setLeftMargin(calculateOffset(startTime, totalDuration));
+  }, [audioPills]);
 
   return (
     <div className={styles.timelineRow}>
@@ -90,15 +90,15 @@ const Timeline = () => {
   );
 
   return (
-      <div className={styles.timelineContainer}>
-        {audioPills.map((pill) => (
-          <TimelineRow
-            key={pill.id}
-            audioData={pill}
-            totalDuration={totalDuration}
-          />
-        ))}
-      </div>
+    <div className={styles.timelineContainer}>
+      {audioPills.map((pill) => (
+        <TimelineRow
+          key={pill.id}
+          audioData={pill}
+          totalDuration={totalDuration}
+        />
+      ))}
+    </div>
   );
 };
 

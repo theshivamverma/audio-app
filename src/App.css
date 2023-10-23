@@ -6,3 +6,18 @@
 .appTitle {
   text-align: center;
 }
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.audioBtn {
+  padding: 0.5rem 1rem;
+  margin: 0 1rem;
+  border-radius: 1rem;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
