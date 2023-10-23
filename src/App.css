@@ -42,3 +42,9 @@
   height: 100%;
   background-color: cornflowerblue;
 }
+
+@media screen and (max-width: 768px) {
+  .appContainer {
+    width: 100%;
+  }
+}

@@ -11,6 +11,8 @@
 
 - JavaScript
 - React
+- Web Audio APIs
+- Vanilla CSS & Module CSS
 
 #### Features
 - Select audio file from list of pills.

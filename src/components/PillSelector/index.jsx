@@ -68,7 +68,7 @@ const PillSelector = () => {
   return (
     <div className={styles.selectorContainer}>
       <p>Audio Samples</p>
-      <div className="pillsContainer">
+      <div className={styles.pillsContainer}>
         {PillsData.map(({ src, bgColor, name }) => (
           <button
             key={name}
