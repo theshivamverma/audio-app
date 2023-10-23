@@ -59,16 +59,19 @@ const PillSelector = () => {
 
   return (
     <div className={styles.selectorContainer}>
-      {PillsData.map(({ src, bgColor, name }) => (
-        <button
-          key={name}
-          className={styles.selectorBtn}
-          style={{ backgroundColor: bgColor }}
-          onClick={() => pillClickHandler(src, name, bgColor)}
-        >
-          {name}
-        </button>
-      ))}
+      <p>Audio Samples</p>
+      <div className="pillsContainer">
+        {PillsData.map(({ src, bgColor, name }) => (
+          <button
+            key={name}
+            className={styles.selectorBtn}
+            style={{ backgroundColor: bgColor }}
+            onClick={() => pillClickHandler(src, name, bgColor)}
+          >
+            {name}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };

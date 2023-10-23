@@ -82,22 +82,19 @@ const TimelineRow = ({ audioData, totalDuration }) => {
 };
 
 const Timeline = () => {
-  const { audioPills } = useAudio();
-
-  const totalDuration = audioPills.reduce(
-    (acc, pill) => (acc = acc + pill.duration),
-    0
-  );
+  const { audioPills, totalDuration } = useAudio();
 
   return (
     <div className={styles.timelineContainer}>
-      {audioPills.map((pill) => (
+      {audioPills.length > 0 ? audioPills.map((pill) => (
         <TimelineRow
           key={pill.id}
           audioData={pill}
           totalDuration={totalDuration}
         />
-      ))}
+      )) : (
+        <p>Select audio files to create your own audio timeline.</p>
+      )}
     </div>
   );
 };

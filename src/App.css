@@ -1,5 +1,5 @@
 .appContainer {
-  width: 50%;
+  width: 80%;
   margin: 0 auto;
 }
 
@@ -7,10 +7,15 @@
   text-align: center;
 }
 
+.actionCenter {
+  padding: 0 1rem;
+}
+
 .buttonContainer {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 1rem;
 }
 
 .audioBtn {
@@ -20,4 +25,20 @@
   border: none;
   outline: none;
   cursor: pointer;
+}
+
+.progressContainer {
+  width: 100%;
+  position: relative;
+  height: 10px;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: darkgray;
+  margin-top: 1rem;
+}
+
+.progressBar {
+  width: 0;
+  height: 100%;
+  background-color: cornflowerblue;
 }

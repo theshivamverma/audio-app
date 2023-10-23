@@ -1,6 +1,11 @@
 import insectsAudio from "../assets/audio/insects.wav"
 import lightRain from "../assets/audio/light-rain.wav"
 import littleBirds from "../assets/audio/little-birds.wav"
+import bass from "../assets/audio/bass.wav"
+import country from "../assets/audio/country.mp3"
+import piano from "../assets/audio/piano.wav"
+import disco from "../assets/audio/disco.mp3"
+
 
 export const PillsData = [
   {
@@ -18,14 +23,24 @@ export const PillsData = [
     src: littleBirds,
     bgColor: "#00b894",
   },
+  {
+    name: "Bass",
+    src: bass,
+    bgColor: "#574b90",
+  },
+  {
+    name: "Country",
+    src: country,
+    bgColor: "#c44569",
+  },
+  {
+    name: "Piano",
+    src: piano,
+    bgColor: "#303952",
+  },
+  {
+    name: "Disco",
+    src: disco,
+    bgColor: "#a55eea",
+  },
 ];
-
-
-
-/*
-  #574b90
-  #c44569
-  #303952
-  #a55eea
-  #e84118
-*/
