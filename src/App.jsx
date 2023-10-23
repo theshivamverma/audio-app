@@ -63,6 +63,7 @@ function App() {
   useEffect(() => {
     if (progress > totalDuration) {
       setProgress(0);
+      setIsPlaying(false)
     }
   }, [progress]);
 
