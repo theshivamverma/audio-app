@@ -36,3 +36,31 @@
   cursor: -o-grab;
   cursor: grabbing;
 }
+
+
+@media screen and (max-width: 768px) {
+  .timelineContainer {
+    padding: 0.5rem;
+  }
+
+  .timelineRow {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 1rem 0;
+    position: relative;
+    background-color: #ced6e0;
+    border-bottom: 1px solid black;
+  }
+
+  .rowPill {
+    width: 100%;
+    border-radius: 1.5rem;
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 0.6rem;
+  }
+}

@@ -77,7 +77,7 @@ const TimelineRow = ({ audioData, totalDuration }) => {
 
   // audio pills are rendered based on their duration and starting point compared to total duration of the timeline
   // width represents the time for which it will be played and offset represents when it will start playing;
-  
+
   return (
     <div className={styles.timelineRow}>
       <div
@@ -91,6 +91,10 @@ const TimelineRow = ({ audioData, totalDuration }) => {
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
+        onTouchStart={(e) => handleMouseDown(e, id)}
+        onTouchMoveCapture={handleMouseMove}
+        onTouchEnd={handleMouseUp}
+        onTouchCancel={handleMouseUp}
       >
         <p>{audioName}</p>
       </div>
