@@ -4,57 +4,90 @@ import { useAudio } from "./context";
 
 import "./App.css";
 
-// Check if the Web Audio API is supported in the current browser\
-let audioContext;
-if ("AudioContext" in window || "webkitAudioContext" in window) {
-  audioContext = new (window.AudioContext || window.webkitAudioContext)();
-} else {
-  console.error("Web Audio API is not supported in this browser.");
-}
-
 function App() {
+  const [audioContext] = useState(
+    new (window.AudioContext || window.webkitAudioContext)()
+  );
+  const [audioSources, setAudioSources] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
 
+  const [startingTimes, setStartingTimes] = useState([]);
+  const [playedAudios, setPlayedAudios] = useState([]);
+
   const { audioPills, setAudioPills, totalDuration } = useAudio();
 
-  const playHandler = () => {
-    console.log(audioContext.state)
-    if (!isPlaying) {
-      setIsPlaying(true);
+  function createAndPlayAudioSource(file, createNewState = true) {
+    const audioSource = audioContext.createBufferSource();
+
+    // Load and decode the audio file
+    fetch(file.path)
+      .then((response) => response.arrayBuffer())
+      .then((data) => audioContext.decodeAudioData(data))
+      .then((decodedBuffer) => {
+        audioSource.buffer = decodedBuffer;
+        audioSource.connect(audioContext.destination);
+        const startTime = file.startTime;
+        setAudioSources((prevAudioSources) => [...prevAudioSources, audioSource]);
+        setStartingTimes(prevStartTimes => [...prevStartTimes, startTime])
+      })
+      .then(() => {
+        createNewState && addAudioPill(file)
+      })
+      .catch((error) => console.error("Error loading audio file: ", error));
+  }
+
+  useEffect(() => {
+    // Function to pause and play audio source
+    if (isPlaying) {
       if (audioContext.state === "suspended") {
         audioContext.resume();
       }
-
-      if(audioContext.state !== "running"){
-        audioPills.forEach((file) => {
-          const audioSource = audioContext.createBufferSource();
-
-          // Load and decode the audio file
-          fetch(file.path)
-            .then((response) => response.arrayBuffer())
-            .then((data) => audioContext.decodeAudioData(data))
-            .then((decodedBuffer) => {
-              audioSource.buffer = decodedBuffer;
-              audioSource.connect(audioContext.destination);
-              audioSource.start(audioContext.currentTime + file.startTime);
-            })
-            .catch((error) =>
-              console.error("Error loading audio file: ", error)
-            );
+      if(audioContext.state !==  "running"){
+        audioSources.forEach((audioSrc, index) => {
+          if(!playedAudios.includes(index)){
+            audioSrc.start(startingTimes[index]);
+            setPlayedAudios((prevAudios) => [...prevAudios, index]);
+          }
+        })
+      }else if(audioContext.state === "running"){
+        audioSources.forEach((audioSrc, index) => {
+          if(!playedAudios.includes(index)){
+            audioSrc.start(startingTimes[index]);
+            setPlayedAudios((prevAudios) => [...prevAudios, index]);
+          }
         });
       }
-    }
-    else {
-      setIsPlaying(false)
+    } else {
       audioContext.suspend();
     }
+  }, [audioSources, isPlaying]);
+
+  const playHandler = () => {
+    setIsPlaying(!isPlaying);
   };
 
   // rest timeline to default
   const resetHandler = () => {
     setAudioPills([]);
-  }
+    setAudioSources([]);
+    setStartingTimes([]);
+    setPlayedAudios([]);
+  };
+
+  const addAudioPill = (newAudioPill) => {
+    const updatedPills = [...audioPills, newAudioPill];
+    setAudioPills(updatedPills);
+  };
+
+  // // Function to change the start time of an audio pill
+  const changeStartTime = (selectedIndex, selectedFile) => {
+    if (selectedIndex >= 0 && selectedIndex < audioPills.length) {
+      const audioSource = audioSources[selectedIndex];
+      audioSource.stop(0);
+      createAndPlayAudioSource({...selectedFile}, false)
+    }
+  };
 
   // progress bar update
   useEffect(() => {
@@ -72,16 +105,22 @@ function App() {
   useEffect(() => {
     if (progress > totalDuration) {
       setProgress(0);
-      setIsPlaying(false)
+      setIsPlaying(false);
       audioContext.suspend();
+      setAudioSources([])
+      setStartingTimes([])
+      setPlayedAudios([])
+      audioPills.forEach(pill => createAndPlayAudioSource(pill, false))
     }
-  }, [progress]);
+  }, [progress, totalDuration]);
 
   return (
     <div className="appContainer">
       <h1 className="appTitle">Let's Mix It!</h1>
-      <PillSelector />
-      <Timeline />
+      <PillSelector
+        createAndPlayAudioSource={createAndPlayAudioSource}
+      />
+      <Timeline changeStartTime={changeStartTime} />
       {audioPills.length > 0 && (
         <div className="actionCenter">
           <div className="progressContainer">

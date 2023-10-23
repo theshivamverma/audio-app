@@ -10,8 +10,8 @@ if ("AudioContext" in window || "webkitAudioContext" in window) {
 } else {
   console.error("Web Audio API is not supported in this browser.");
 }
-const PillSelector = () => {
-  const { setAudioPills } = useAudio();
+const PillSelector = ({ createAndPlayAudioSource }) => {
+  const { audioPills } = useAudio();
 
   const pillClickHandler = (soundSource, soundName, soundColor) => {
     let duration;
@@ -27,34 +27,32 @@ const PillSelector = () => {
             duration = buffer.duration;
 
             // adding new file to state array
-            setAudioPills((prevPills) => {
-              const l = prevPills.length;
+            const l = audioPills.length;
 
-              // duration of last audio pill in state array
-              const lastUpdatedDuration =
-                l !== 0 ? prevPills[l - 1].duration : null;
+            // duration of last audio pill in state array
+            const lastUpdatedDuration =
+              l !== 0 ? audioPills[l - 1].duration : null;
 
-              // starting point of last audio pill in state array
-              const lastUpdatedStartpoint =
-                l !== 0 ? prevPills[l - 1].startTime : null;
+            // starting point of last audio pill in state array
+            const lastUpdatedStartpoint =
+              l !== 0 ? audioPills[l - 1].startTime : null;
 
-              // calculate new starting point for current audio file
-              // just after the last audio file
-              const newStartPoint = lastUpdatedDuration
-                ? lastUpdatedDuration + lastUpdatedStartpoint
-                : 0;
-              return [
-                ...prevPills,
-                {
-                  id: Math.random(),
-                  audioName: soundName,
-                  path: soundSource,
-                  duration,
-                  startTime: newStartPoint,
-                  bgColor: soundColor,
-                },
-              ];
-            });
+            // calculate new starting point for current audio file
+            // just after the last audio file
+            const newStartPoint = lastUpdatedDuration
+              ? lastUpdatedDuration + lastUpdatedStartpoint
+              : 0;
+
+            const file = {
+              id: Math.random(),
+              audioName: soundName,
+              path: soundSource,
+              duration,
+              startTime: newStartPoint,
+              bgColor: soundColor,
+            };
+
+            createAndPlayAudioSource(file);
           })
           .catch((error) => {
             console.error("Error decoding audio data:", error);

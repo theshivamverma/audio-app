@@ -4,7 +4,7 @@ import { calculateOffset, calculateWidth } from "../../common/utils";
 
 import styles from "./Timeline.module.css";
 
-const TimelineRow = ({ audioData, totalDuration }) => {
+const TimelineRow = ({ audioData, totalDuration, changeStartTime }) => {
   const { audioName, duration, startTime, bgColor, id } = audioData;
   const { audioPills, setAudioPills } = useAudio();
 
@@ -58,16 +58,24 @@ const TimelineRow = ({ audioData, totalDuration }) => {
   };
 
   const handleMouseUp = () => {
-    setIsDragging(false);
-    // update audio start time based on dragged position
-    setAudioPills((prevPills) => {
-      return prevPills.map((pill) => {
-        if (pill.id === selectedPill) {
-          pill.startTime = (totalDuration * leftMargin) / 100;
-        }
-        return pill;
+    if(isDragging){
+      setIsDragging(false);
+      const newTime = (totalDuration * leftMargin) / 100;
+      let selectedFile;
+      let selectedIndex;
+      // update audio start time based on dragged position
+      setAudioPills((prevPills) => {
+        return prevPills.map((pill, index) => {
+          if (pill.id === selectedPill) {
+            selectedIndex = index;
+            pill.startTime = newTime;
+            selectedFile = { ...pill };
+          }
+          return pill;
+        });
       });
-    });
+      changeStartTime(selectedIndex, selectedFile);
+    }
   };
 
   useEffect(() => {
@@ -102,7 +110,7 @@ const TimelineRow = ({ audioData, totalDuration }) => {
   );
 };
 
-const Timeline = () => {
+const Timeline = ({changeStartTime}) => {
   const { audioPills, totalDuration } = useAudio();
 
   return (
@@ -112,6 +120,7 @@ const Timeline = () => {
           key={pill.id}
           audioData={pill}
           totalDuration={totalDuration}
+          changeStartTime={changeStartTime}
         />
       )) : (
         <p>Select audio files to create your own audio timeline.</p>
