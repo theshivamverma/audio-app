@@ -19,26 +19,35 @@ function App() {
   const { audioPills, setAudioPills, totalDuration } = useAudio();
 
   const playHandler = () => {
+    console.log(audioContext.state)
     if (!isPlaying) {
       setIsPlaying(true);
       if (audioContext.state === "suspended") {
         audioContext.resume();
       }
 
-      audioPills.forEach((file) => {
-        const audioSource = audioContext.createBufferSource();
+      if(audioContext.state !== "running"){
+        audioPills.forEach((file) => {
+          const audioSource = audioContext.createBufferSource();
 
-        // Load and decode the audio file
-        fetch(file.path)
-          .then((response) => response.arrayBuffer())
-          .then((data) => audioContext.decodeAudioData(data))
-          .then((decodedBuffer) => {
-            audioSource.buffer = decodedBuffer;
-            audioSource.connect(audioContext.destination);
-            audioSource.start(audioContext.currentTime + file.startTime);
-          })
-          .catch((error) => console.error("Error loading audio file: ", error));
-      });
+          // Load and decode the audio file
+          fetch(file.path)
+            .then((response) => response.arrayBuffer())
+            .then((data) => audioContext.decodeAudioData(data))
+            .then((decodedBuffer) => {
+              audioSource.buffer = decodedBuffer;
+              audioSource.connect(audioContext.destination);
+              audioSource.start(audioContext.currentTime + file.startTime);
+            })
+            .catch((error) =>
+              console.error("Error loading audio file: ", error)
+            );
+        });
+      }
+    }
+    else {
+      setIsPlaying(false)
+      audioContext.suspend();
     }
   };
 
@@ -64,6 +73,7 @@ function App() {
     if (progress > totalDuration) {
       setProgress(0);
       setIsPlaying(false)
+      audioContext.suspend();
     }
   }, [progress]);
 
@@ -84,7 +94,7 @@ function App() {
           </div>
           <div className="buttonContainer">
             <button className="audioBtn" id="play-button" onClick={playHandler}>
-              {isPlaying ? "Playing Audio..." : "Play"}
+              {isPlaying ? "Pause" : "Play"}
             </button>
             {!isPlaying && (
               <button className="audioBtn" onClick={resetHandler}>
